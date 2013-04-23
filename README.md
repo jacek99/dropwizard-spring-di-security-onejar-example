@@ -1,5 +1,5 @@
-dropwizard-spring-di-security-onejar-example
-============================================
+Dropwizard Spring DI/Security & OneJar Example
+==============================================
 
 Example showing how to integrate Dropwizard, Spring DI, Spring Security and OneJar together.
 
