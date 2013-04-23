@@ -2,9 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="a245f103-dfad-4bde-910e-9c95798e2fc7" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Dropwizard_Spring.odp" afterPath="$PROJECT_DIR$/Dropwizard_Spring.odp" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Dropwizard_Spring.pdf" afterPath="$PROJECT_DIR$/Dropwizard_Spring.pdf" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/README.md" afterPath="$PROJECT_DIR$/README.md" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/dropwizard-spring-di-security-onejar-example.iws" afterPath="$PROJECT_DIR$/dropwizard-spring-di-security-onejar-example.iws" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/test/resources/bdd/features/country_rest.feature" afterPath="$PROJECT_DIR$/src/test/resources/bdd/features/country_rest.feature" />
     </list>
     <ignored path="dropwizard-spring-di-security-onejar-example.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -67,12 +67,21 @@
       <file leaf-file-name="README.md" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/README.md">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="10" column="60" selection-start="399" selection-end="399" vertical-scroll-proportion="0.33557048">
+            <state line="97" column="0" selection-start="2268" selection-end="2268" vertical-scroll-proportion="0.4966443">
               <folding />
             </state>
           </provider>
           <provider editor-type-id="MarkdownPreviewEditor">
             <state />
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="country_rest.feature" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/test/resources/bdd/features/country_rest.feature">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="71" column="4" selection-start="2119" selection-end="2119" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
           </provider>
         </entry>
       </file>
@@ -90,6 +99,7 @@
     <option name="changedFiles">
       <list>
         <option value="$PROJECT_DIR$/.gitignore" />
+        <option value="$PROJECT_DIR$/src/test/resources/bdd/features/country_rest.feature" />
         <option value="$PROJECT_DIR$/README.md" />
       </list>
     </option>
@@ -165,6 +175,18 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="test" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="resources" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="features" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -370,7 +392,15 @@
       <created>1366753897704</created>
       <updated>1366753897704</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="doc fix">
+      <created>1366754029486</created>
+      <updated>1366754029486</updated>
+    </task>
+    <task id="LOCAL-00005" summary="doc fix">
+      <created>1366754082938</created>
+      <updated>1366754082938</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -501,11 +531,6 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/github/jacek99/myapp/exception/mapper/ConflictExceptionMapper.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="16" column="24" selection-start="562" selection-end="562" vertical-scroll-proportion="0.0" />
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/README.md">
       <provider selected="true" editor-type-id="text-editor">
         <state line="67" column="61" selection-start="1559" selection-end="1559" vertical-scroll-proportion="0.0" />
@@ -580,9 +605,16 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/test/resources/bdd/features/country_rest.feature">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="71" column="4" selection-start="2119" selection-end="2119" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/README.md">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="10" column="60" selection-start="399" selection-end="399" vertical-scroll-proportion="0.33557048">
+        <state line="97" column="0" selection-start="2268" selection-end="2268" vertical-scroll-proportion="0.4966443">
           <folding />
         </state>
       </provider>

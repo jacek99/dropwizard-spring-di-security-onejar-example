@@ -20,12 +20,12 @@ Feature: Country REST Service
     | method  | user  |
     | GET     | read  |
     | PATCH   | admin |
-    | DELETE  | admin|
+    | DELETE  | admin |
 
 
   @country_add
   Scenario: Add one
-  # add and return JSON as part of the payload
+    # add and return JSON as part of the payload
     When "admin:test" sends POST "/myapp/services/rest/country" with "countryCode=PL&name=Poland"
     Then I expect HTTP code 201
     And I expect JSON equivalent to
