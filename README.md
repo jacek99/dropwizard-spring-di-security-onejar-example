@@ -8,6 +8,13 @@ BDD tool, like Python behave:
 
 https://github.com/behave/behave
 
+**Note**
+
+This application uses Lombok:
+http://projectlombok.org/
+
+Please make sure you have the appropriate Lombok plugin installed in your IDE.
+
 
 Gradle tasks
 ============

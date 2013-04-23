@@ -55,7 +55,7 @@ task run(dependsOn: 'classes', type: JavaExec) {
 
 task runOneJar(type:Exec, dependsOn: oneJar) {
     workingDir = "build/libs"
-    commandLine = ['java', '-jar', '-server', "dropwizard-spring-$version-standalone.jar",'server','../../myapp.yml']
+    commandLine = ['java', '-jar', '-server', "dropwizard-spring-di-security-onejar-example-$version-standalone.jar",'server','../../myapp.yml']
 }
 
 task bdd(type: Exec) {
@@ -68,7 +68,7 @@ task bdd(type: Exec) {
     doFirst{
         println "Starting OneJar application on separate thread..."
         Thread.startDaemon {
-            oneJarProcess = "java -jar -server build/libs/dropwizard-spring-$version-standalone.jar server myapp.yml".execute()
+            oneJarProcess = "java -jar -server build/libs/dropwizard-spring-di-security-onejar-example-$version-standalone.jar server myapp.yml".execute()
         }
         sleep 5000
         println "Started OneJar application"

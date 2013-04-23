@@ -1,0 +1,15 @@
+<beans:beans xmlns="http://www.springframework.org/schema/security"
+             xmlns:beans="http://www.springframework.org/schema/beans"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="
+      http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+      http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.1.xsd">
+
+    <global-method-security secured-annotations="enabled" authentication-manager-ref="myAuthenticationManager" proxy-target-class="true"/>
+
+    <http create-session="stateless" realm="MYAPP" authentication-manager-ref="myAuthenticationManager">
+        <http-basic />
+        <intercept-url pattern="/myapp/services/**" access="ROLE_READ_ONLY" />
+    </http>
+
+</beans:beans>
