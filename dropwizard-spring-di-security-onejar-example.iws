@@ -2,7 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="a245f103-dfad-4bde-910e-9c95798e2fc7" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/README.md" afterPath="$PROJECT_DIR$/README.md" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Dropwizard_Spring.odp" afterPath="$PROJECT_DIR$/Dropwizard_Spring.odp" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Dropwizard_Spring.pdf" afterPath="$PROJECT_DIR$/Dropwizard_Spring.pdf" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/dropwizard-spring-di-security-onejar-example.iws" afterPath="$PROJECT_DIR$/dropwizard-spring-di-security-onejar-example.iws" />
     </list>
     <ignored path="dropwizard-spring-di-security-onejar-example.iws" />
@@ -365,7 +366,11 @@
       <created>1366753664100</created>
       <updated>1366753664100</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="doc fix">
+      <created>1366753897704</created>
+      <updated>1366753897704</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="ToolWindowManager">
