@@ -1,0 +1,90 @@
+apply plugin: com.smokejumperit.gradle.OneJarPlugin
+
+apply plugin: 'java'
+apply plugin: 'idea'
+apply plugin: 'eclipse'
+
+project.sourceCompatibility = 1.7
+project.targetCompatibility = 1.7
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile "com.yammer.dropwizard:dropwizard-core:0.6.2"
+    compile "org.apache.geronimo.specs:geronimo-servlet_3.0_spec:1.0"
+    compile 'org.projectlombok:lombok:0.11.6'
+    compile "org.springframework:spring-web:$springVersion"
+    compile "javax.inject:javax.inject:1"
+
+    compile "org.springframework.security:spring-security-web:$springSecurityVersion"
+    compile "org.springframework.security:spring-security-config:$springSecurityVersion"
+    compile "org.springframework.security:spring-security-aspects:$springSecurityVersion"
+
+}
+
+
+jar {
+    manifest {
+        attributes 'Main-Class': 'com.github.jacek99.myapp.MyAppService'
+    }
+}
+
+/**
+ * One-JAR plugin integration
+ */
+buildscript {
+    repositories {
+        mavenRepo url:'http://repo.smokejumperit.com'
+    }
+    dependencies {
+        classpath 'com.smokejumperit:gradle-plugins:0.8.2'
+    }
+}
+
+
+/**
+ * BDD integration using Python behave for
+ */
+task run(dependsOn: 'classes', type: JavaExec) {
+    main = 'com.github.jacek99.myapp.MyAppService'
+    classpath = sourceSets.main.runtimeClasspath
+    args 'server','myapp.yml'
+}
+
+task runOneJar(type:Exec, dependsOn: oneJar) {
+    workingDir = "build/libs"
+    commandLine = ['java', '-jar', '-server', "dropwizard-spring-$version-standalone.jar",'server','../../myapp.yml']
+}
+
+task bdd(type: Exec) {
+    description = "Tests BDDs against the running OneJar application"
+    commandLine = ['behave','-cS','--format','pretty']
+    workingDir = "./src/test/resources/bdd"
+    standardOutput = new ByteArrayOutputStream()
+    def oneJarProcess = null
+
+    doFirst{
+        println "Starting OneJar application on separate thread..."
+        Thread.startDaemon {
+            oneJarProcess = "java -jar -server build/libs/dropwizard-spring-$version-standalone.jar server myapp.yml".execute()
+        }
+        sleep 5000
+        println "Started OneJar application"
+    }
+
+    doLast {
+        def output = standardOutput.toString()
+        def list = output.split("\n")
+        list.each {line ->
+            if (line.contains("... failed")) {
+                print line
+            }
+        }
+        if (output.contains("... failed")) {
+            throw new GradleException("BDDs run with failures")
+        }
+        oneJarProcess.destroy()
+    }
+}

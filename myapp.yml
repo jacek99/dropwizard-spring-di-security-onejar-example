@@ -1,0 +1,22 @@
+http:
+  rootPath: /myapp/services/rest/*
+  port: 8080
+  adminPort: 8081
+  requestLog:
+    console:
+      enabled: false
+    file:
+      enabled: false
+    syslog:
+      enabled: false
+
+# Logging settings.
+logging:
+  # The default level of all loggers. Can be OFF, ERROR, WARN, INFO, DEBUG, TRACE, or ALL.
+  level: ERROR
+  loggers:
+    "com.github": ERROR
+    "com.yammer.dropwizard": INFO
+  console:
+    enabled: true
+
