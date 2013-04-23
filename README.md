@@ -8,6 +8,9 @@ BDD tool, like Python behave:
 
 https://github.com/behave/behave
 
+This application was prepared for a Houston JUG presentation:
+https://github.com/jacek99/dropwizard-spring-di-security-onejar-example/raw/master/Dropwizard_Spring.pdf
+
 **Note**
 
 This application uses Lombok:

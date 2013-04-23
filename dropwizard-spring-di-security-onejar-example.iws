@@ -3,8 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="a245f103-dfad-4bde-910e-9c95798e2fc7" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/README.md" afterPath="$PROJECT_DIR$/README.md" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/dropwizard-spring-di-security-onejar-example.iml" afterPath="$PROJECT_DIR$/dropwizard-spring-di-security-onejar-example.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/dropwizard-spring-di-security-onejar-example.ipr" afterPath="$PROJECT_DIR$/dropwizard-spring-di-security-onejar-example.ipr" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/dropwizard-spring-di-security-onejar-example.iws" afterPath="$PROJECT_DIR$/dropwizard-spring-di-security-onejar-example.iws" />
     </list>
     <ignored path="dropwizard-spring-di-security-onejar-example.iws" />
@@ -64,7 +62,20 @@
     <favorites_list name="dropwizard-spring-di-security-onejar-example" />
   </component>
   <component name="FileEditorManager">
-    <leaf />
+    <leaf>
+      <file leaf-file-name="README.md" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/README.md">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="10" column="60" selection-start="399" selection-end="399" vertical-scroll-proportion="0.33557048">
+              <folding />
+            </state>
+          </provider>
+          <provider editor-type-id="MarkdownPreviewEditor">
+            <state />
+          </provider>
+        </entry>
+      </file>
+    </leaf>
   </component>
   <component name="FindManager">
     <FindUsagesManager>
@@ -350,7 +361,11 @@
       <created>1366749650037</created>
       <updated>1366749650037</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="doc fix">
+      <created>1366753664100</created>
+      <updated>1366753664100</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -423,7 +438,7 @@
     <option name="SHOW_VCS_ERROR_NOTIFICATIONS" value="true" />
     <option name="FORCE_NON_EMPTY_COMMENT" value="false" />
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="false" />
-    <option name="LAST_COMMIT_MESSAGE" value="Full example + docs" />
+    <option name="LAST_COMMIT_MESSAGE" value="doc fix" />
     <option name="MAKE_NEW_CHANGELIST_ACTIVE" value="true" />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_FILES_UP_TO_DATE_BEFORE_COMMIT" value="false" />
@@ -437,6 +452,7 @@
     <option name="SHOW_FILE_HISTORY_AS_TREE" value="false" />
     <option name="FILE_HISTORY_SPLITTER_PROPORTION" value="0.6" />
     <MESSAGE value="Full example + docs" />
+    <MESSAGE value="doc fix" />
   </component>
   <component name="VssConfiguration">
     <option name="CLIENT_PATH" value="" />
@@ -561,7 +577,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/README.md">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="322" column="26" selection-start="17161" selection-end="17161" vertical-scroll-proportion="0.9358974">
+        <state line="10" column="60" selection-start="399" selection-end="399" vertical-scroll-proportion="0.33557048">
           <folding />
         </state>
       </provider>
