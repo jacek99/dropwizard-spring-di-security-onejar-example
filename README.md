@@ -89,4 +89,14 @@ The rest is the same afterwards:
      easy_install pip
      pip install behave nose httplib2 pyyaml
 
+Running BDDs manually
+=====================
+
+Run the app from your IDE.
+Go to a terminal and do
+
+  cd src/test/resources/bdd
+  behave
+
+and you should see a human-readable BDD execute:.
 
