@@ -1,5 +1,0 @@
-Manifest-Version: 1.0
-Ant-Version: Apache Ant 1.8.2
-Created-By: 1.7.0-internal-robert_2011_02_04_10_24-b00 (Oracle Corpora
- tion)
-
