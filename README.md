@@ -75,7 +75,7 @@ To get it fully running and installed do the following:
 
 Install the Windows version of Python setuptools:
 
-    https://pypi.python.org/pypi/setuptools#windows
+https://pypi.python.org/pypi/setuptools#windows
 
 The rest is the same afterwards:
 
