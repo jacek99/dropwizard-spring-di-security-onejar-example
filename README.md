@@ -95,8 +95,8 @@ Running BDDs manually
 Run the app from your IDE.
 Go to a terminal and do
 
-  cd src/test/resources/bdd
-  behave
+	cd src/test/resources/bdd
+	behave
 
 and you should see a human-readable BDD execute:.
 
