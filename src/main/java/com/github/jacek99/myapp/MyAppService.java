@@ -3,6 +3,7 @@ package com.github.jacek99.myapp;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.github.jacek99.myapp.spring.SpringContextLoaderListener;
 import com.yammer.dropwizard.Service;
+import com.yammer.dropwizard.assets.AssetsBundle;
 import com.yammer.dropwizard.config.Bootstrap;
 import com.yammer.dropwizard.config.Environment;
 import com.yammer.dropwizard.tasks.Task;
@@ -27,6 +28,9 @@ public class MyAppService extends Service<MyAppConfiguration> {
     public void initialize(Bootstrap<MyAppConfiguration> bootstrap) {
         bootstrap.setName("my-app-service");
         bootstrap.getObjectMapperFactory().setSerializationInclusion(JsonInclude.Include.NON_NULL);
+
+        //serve some HTML resources
+        bootstrap.addBundle(new AssetsBundle("/assets/", "/"));
     }
 
     @Override
@@ -81,5 +85,6 @@ public class MyAppService extends Service<MyAppConfiguration> {
 
         //activate Spring Security filter
         environment.addFilter(DelegatingFilterProxy.class,"/*").setName("springSecurityFilterChain");
+
     }
 }
