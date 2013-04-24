@@ -1,6 +1,9 @@
 .gradle
 out
 build
+*.iml
+*.iws
+*.iml
 
 *.class
 
