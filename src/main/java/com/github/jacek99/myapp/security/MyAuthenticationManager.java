@@ -1,13 +1,3 @@
-/*
- *
- *  * Copyright (c) 2013 by PROS Inc.  All Rights Reserved.
- *  * This software is the confidential and proprietary information of
- *  * PROS Inc ("Confidential Information").
- *  * You shall not disclose such Confidential Information and shall use it only in
- *  * accordance with the terms of the license agreement you entered into with PROS.
- *
- */
-
 package com.github.jacek99.myapp.security;
 
 import com.google.common.collect.ArrayListMultimap;
@@ -27,7 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Custom authentication manager
+ * Custom authentication manager with dummy hard-coded users and passwords
  */
 @Service("myAuthenticationManager")
 public class MyAuthenticationManager implements AuthenticationManager {
