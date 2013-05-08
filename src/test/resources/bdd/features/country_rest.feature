@@ -110,7 +110,7 @@ Feature: Country REST Service
     Then I expect HTTP code 201
     # update it
     When "admin:test" sends PATCH "/myapp/services/rest/country/PL" with "<params>"
-    Then I expect HTTP code 200
+    Then I expect HTTP code 204
     # verify
     When "read:test" sends GET "/myapp/services/rest/country/PL"
     Then I expect HTTP code 200
@@ -154,7 +154,7 @@ Feature: Country REST Service
     Then I expect HTTP code 201
     # delete & validate
     When "admin:test" sends DELETE "/myapp/services/rest/country/PL"
-    Then I expect HTTP code 200
+    Then I expect HTTP code 204
     When "read:test" sends GET "/myapp/services/rest/country"
     Then I expect HTTP code 200
     And I expect JSON equivalent to

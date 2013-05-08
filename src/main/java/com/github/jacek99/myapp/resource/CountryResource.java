@@ -20,24 +20,27 @@ import javax.ws.rs.core.Response;
 import java.util.List;
 
 @Path("/country")
-@Produces(MediaType.APPLICATION_JSON)
 @Service
 public class CountryResource {
 
     @Inject private CountryDAO dao;
 
     @GET
+    @Produces(MediaType.APPLICATION_JSON)
     public List<Country> getAll() {
         return dao.getAll();
     }
 
-    @GET @Path("/{countryCode}")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/{countryCode}")
     public Country getOne(@PathParam("countryCode") String countryCode) {
         return dao.getExistingById(countryCode);
     }
 
     @POST
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+    @Produces(MediaType.APPLICATION_JSON)
     public Response add(@FormParam("countryCode") String countryCode, @FormParam("name") String name) {
         Country country = new Country();
         country.setCountryCode(countryCode);
@@ -56,7 +59,7 @@ public class CountryResource {
             country.setName(name);
         }
         dao.update(country);
-        return Response.ok().build();
+        return Response.noContent().build();
     }
 
     @DELETE
@@ -64,7 +67,7 @@ public class CountryResource {
     public Response delete(@PathParam("countryCode") String countryCode) {
         Country country = dao.getExistingById(countryCode);
         dao.delete(country.getCountryCode());
-        return Response.ok().build();
+        return Response.noContent().build();
     }
 
 }
