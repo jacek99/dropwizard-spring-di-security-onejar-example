@@ -69,8 +69,7 @@ task bdd(type: Exec, dependsOn: oneJar) {
         Thread.startDaemon {
             oneJarProcess = "java -jar -server build/libs/dropwizard-spring-di-security-onejar-example-$version-standalone.jar server myapp.yml".execute()
         }
-        sleep 10000
-        println "Started OneJar application"
+        println "Waiting for application to start before executing tests..."
         addShutdownHook {
             println "Shutting down OneJar application"
             oneJarProcess.destroy()

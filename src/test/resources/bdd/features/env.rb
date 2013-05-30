@@ -8,6 +8,8 @@ AfterConfiguration do |config|
   # read config file
   $config = {}
   load_app_config_file("myapp.yml")
+
+  wait_for_apps_to_start()
 end
 
 
@@ -43,13 +45,31 @@ end
 
 # clears out the cache for an app
 def truncate_data(app_context)
-
-  port = $config[app_context]["http"]["adminPort"]
-  host= "127.0.0.1"
-
-  http = Net::HTTP.new(host, port)
+  http = Net::HTTP.new("127.0.0.1", $config[app_context]["http"]["adminPort"])
   request = Net::HTTP::Post.new("/tasks/clearData")
   request.basic_auth("ops","password")
   response = http.request(request)
   response.code.should == "200"
+end
+
+def wait_for_apps_to_start
+  # ping the health checks to wait until it returns 200
+  $config.each do |doc|
+    app_context= doc[0]
+    http = Net::HTTP.new("127.0.0.1", $config[app_context]["http"]["adminPort"])
+    request = Net::HTTP::Get.new("/healthcheck")
+    request.basic_auth("ops","password")
+
+    begin
+      response = http.request(request)
+      while response.code != "200"
+        sleep(1.0)
+        response = http.request(request)
+      end
+    rescue
+      # call itself again in case of connection error
+      sleep(1.0)
+      wait_for_apps_to_start()
+    end
+  end
 end
