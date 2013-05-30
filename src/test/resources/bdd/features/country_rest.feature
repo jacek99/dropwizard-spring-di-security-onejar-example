@@ -5,7 +5,7 @@ Feature: Country REST Service
   Scenario: Query all
     # should get empty response
     When "read:test" sends GET "/myapp/services/rest/country"
-    Then I expect HTTP code 2001
+    Then I expect HTTP code 200
     And I expect JSON equivalent to
     """
     []
