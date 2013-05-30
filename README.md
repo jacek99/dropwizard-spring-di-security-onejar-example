@@ -80,9 +80,7 @@ To get it fully running and installed do the following:
 
 **Windows**
 
-Install Ruby for Windows:
-
-    http://rubyinstaller.org/
+Install Ruby for Windows: http://rubyinstaller.org/
 
 The rest is similar afterwards:
 
