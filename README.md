@@ -95,7 +95,7 @@ Run the app from your IDE.
 You will need to create a launcher that passes in the **server myapp.yml** program arguments to the main class
 MyAppService, as seen in the image below:
 
-    ![IDEA Intellij Launcher](launcher.png "IntelliJ Launcher)
+![IDEA Intellij Launcher](launcher.png "IntelliJ Launcher)
 
 Go to a terminal and do
 
