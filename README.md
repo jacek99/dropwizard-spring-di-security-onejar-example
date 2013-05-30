@@ -6,7 +6,7 @@ Example showing how to integrate Dropwizard, Spring DI, Spring Security and OneJ
 It also shows how to perform integration testing of a REST application
 using the famous BDD tool Cucumber:
 
-https://cukes.info
+http://cukes.info
 
 This application was prepared for a Houston JUG presentation:
 
