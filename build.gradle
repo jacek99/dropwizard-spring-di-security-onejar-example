@@ -60,9 +60,8 @@ task runOneJar(type:Exec, dependsOn: oneJar) {
 
 task bdd(type: Exec) {
     description = "Tests BDDs against the running OneJar application"
-    commandLine = ['behave','-cS','--format','pretty']
+    commandLine = ['cucumber']
     workingDir = "./src/test/resources/bdd"
-    standardOutput = new ByteArrayOutputStream()
     def oneJarProcess = null
 
     doFirst{
@@ -70,21 +69,12 @@ task bdd(type: Exec) {
         Thread.startDaemon {
             oneJarProcess = "java -jar -server build/libs/dropwizard-spring-di-security-onejar-example-$version-standalone.jar server myapp.yml".execute()
         }
-        sleep 5000
+        sleep 10000
         println "Started OneJar application"
+        addShutdownHook {
+            println "Shutting down OneJar application"
+            oneJarProcess.destroy()
+        }
     }
 
-    doLast {
-        def output = standardOutput.toString()
-        def list = output.split("\n")
-        list.each {line ->
-            if (line.contains("... failed")) {
-                print line
-            }
-        }
-        if (output.contains("... failed")) {
-            throw new GradleException("BDDs run with failures")
-        }
-        oneJarProcess.destroy()
-    }
 }

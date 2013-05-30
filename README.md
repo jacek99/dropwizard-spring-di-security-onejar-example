@@ -3,12 +3,13 @@ Dropwizard Spring DI/Security & OneJar Example
 
 Example showing how to integrate Dropwizard, Spring DI, Spring Security and OneJar together.
 
-It also shows how to perform integration testing of a REST application using an external
-BDD tool, like Python behave:
+It also shows how to perform integration testing of a REST application
+using the famous BDD tool Cucumber:
 
-https://github.com/behave/behave
+https://cukes.info
 
 This application was prepared for a Houston JUG presentation:
+
 https://github.com/jacek99/dropwizard-spring-di-security-onejar-example/raw/master/Dropwizard_Spring.pdf
 
 **Note**
@@ -63,34 +64,30 @@ Cucumber-style BDDs are the best and most productive way to accomplish this task
 
 http://cukes.info/
 
-In this example we use the Python Behave BDD library:
-
-https://github.com/behave/behave
-
 To get it fully running and installed do the following:
 
 **Ubuntu / Debian**
 
-    sudo apt-get install python-setuptools
-    sudo easy_install pip
-    sudo pip install behave nose httplib2 pyyaml
+    sudo apt-get install ruby
+    sudo gem install bundler
+    bundle install
 
 **Fedora / CentOS**
 
-    sudo yum install python-setuptools
-    sudo easy_install pip
-    sudo pip install behave nose httplib2 pyyaml
+    sudo yum install ruby
+    gem install bundler
+    bundle install
 
 **Windows**
 
-Install the Windows version of Python setuptools:
+Install Ruby for Windows:
 
-https://pypi.python.org/pypi/setuptools#windows
+    http://rubyinstaller.org/
 
-The rest is the same afterwards:
+The rest is similar afterwards:
 
-     easy_install pip
-     pip install behave nose httplib2 pyyaml
+    gem install bundler
+    bundle install
 
 Running BDDs manually
 =====================
@@ -99,7 +96,7 @@ Run the app from your IDE.
 Go to a terminal and do
 
 	cd src/test/resources/bdd
-	behave
+	cucumber
 
 and you should see a human-readable BDD execute:
 
