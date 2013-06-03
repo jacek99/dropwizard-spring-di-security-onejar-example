@@ -12,7 +12,9 @@ repositories {
 }
 
 dependencies {
-    compile "com.yammer.dropwizard:dropwizard-core:0.6.2"
+    compile ("com.yammer.dropwizard:dropwizard-core:0.6.2") {
+        exclude group: 'org.eclipse.jetty.orbit'
+    }
     compile "org.apache.geronimo.specs:geronimo-servlet_3.0_spec:1.0"
     compile 'org.projectlombok:lombok:0.11.6'
     compile "org.springframework:spring-web:$springVersion"
