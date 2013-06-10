@@ -10,10 +10,12 @@ GEM
     diff-lcs (1.2.4)
     gherkin (2.12.0)
       multi_json (~> 1.3)
+    json_pure (1.8.0)
     json_spec (1.1.1)
       multi_json (~> 1.0)
       rspec (~> 2.0)
     multi_json (1.7.4)
+    psych (1.3.4)
     rspec (2.13.0)
       rspec-core (~> 2.13.0)
       rspec-expectations (~> 2.13.0)
@@ -28,4 +30,6 @@ PLATFORMS
 
 DEPENDENCIES
   cucumber
+  json_pure (~> 1.8.0)
   json_spec
+  psych (~> 1.3.4)

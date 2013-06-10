@@ -68,13 +68,13 @@ To get it fully running and installed do the following:
 
 **Ubuntu / Debian**
 
-    sudo apt-get install ruby ruby-dev
+    sudo apt-get install ruby ruby-dev libyaml-dev
     sudo gem install bundler
     bundle install
 
 **Fedora / CentOS**
 
-    sudo yum install ruby ruby-devel
+    sudo yum install ruby ruby-devel libyaml-devel
     gem install bundler
     bundle install
 
