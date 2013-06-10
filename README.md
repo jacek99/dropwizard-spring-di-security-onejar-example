@@ -86,6 +86,11 @@ http://rubyinstaller.org/
 and the Ruby DevKit as well:
 http://rubyinstaller.org/add-ons/devkit/
 
+Install the dev kit (from the folder where you placed it):
+
+    ruby dk.rb init
+    ruby dk.rb install
+
 The rest is similar afterwards:
 
     gem install bundler
