@@ -63,7 +63,7 @@ task runOneJar(type:Exec, dependsOn: oneJar) {
 task bdd(type: Exec, dependsOn: oneJar) {
     description = "Tests BDDs against the running OneJar application"
     commandLine = ['bundle','exec','cucumber']
-    workingDir = "./src/test/resources/bdd"
+    workingDir = "./src/test/resources/bdd" 
     def oneJarProcess = null
 
     doFirst{

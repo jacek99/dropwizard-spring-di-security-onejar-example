@@ -1,6 +1,6 @@
 Dropwizard Spring DI/Security & OneJar Example
 ==============================================
-
+ 
 Example showing how to integrate Dropwizard, Spring DI, Spring Security and OneJar together.
 
 It also shows how to perform integration testing of a REST application
