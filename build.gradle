@@ -70,7 +70,7 @@ task bdd(type: Exec, dependsOn: oneJar) {
         commandLine 'cmd', '/c', 'bundle.bat', 'exec', 'cucumber'
     }
     else {
-        commandLine = ['bundle', 'exec', 'cucumber']
+        commandLine = ['cucumber']
     }
     workingDir = "./src/test/resources/bdd" 
     def oneJarProcess = null
