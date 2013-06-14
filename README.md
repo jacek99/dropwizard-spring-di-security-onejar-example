@@ -80,10 +80,10 @@ To get it fully running and installed do the following:
 
 **Windows**
 
-Install Ruby for Windows: 
+Install Ruby 1.9 (NOT 2.0) for Windows: 
 http://rubyinstaller.org/
 
-and the Ruby DevKit as well:
+and the Ruby 1.9 DevKit as well:
 http://rubyinstaller.org/add-ons/devkit/
 
 Install the dev kit (from the folder where you placed it):
