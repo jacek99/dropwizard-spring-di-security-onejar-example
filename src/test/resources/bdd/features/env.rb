@@ -44,8 +44,8 @@ end
 def wait_for_apps_to_start
   # ping the health checks to wait until it returns 200
   $config["http"].each do |doc|
-    app_context= doc[0]
-    http = Net::HTTP.new("127.0.0.1", doc[1]["adminPort"])
+
+    http = Net::HTTP.new(doc[1]["host"], doc[1]["adminPort"])
     request = Net::HTTP::Get.new("/healthcheck")
     request.basic_auth("ops","password")
 
