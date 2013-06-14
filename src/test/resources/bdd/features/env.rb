@@ -3,7 +3,6 @@ require "rspec/expectations"
 require 'pathname'
 require "yaml"
 require "net/http"
-require 'cassandra-cql'
 
 AfterConfiguration do |config|
   # read config file
