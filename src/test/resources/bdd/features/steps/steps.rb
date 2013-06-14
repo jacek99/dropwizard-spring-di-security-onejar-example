@@ -69,7 +69,7 @@ end
 
 When(/^"(.+):(.+)" sends (GET|POST) "([^"]+)" on admin port$/) do |user,password,method,url|
   # send it to all apps registered in the $config
-  $config.each do |doc|
+  $config["http"].each do |doc|
     app_context = doc[0]
     http, request = get_http_request(method,url,user,password,true,app_context)
     execute_http_request(http, request)
@@ -77,7 +77,7 @@ When(/^"(.+):(.+)" sends (GET|POST) "([^"]+)" on admin port$/) do |user,password
 end
 
 When(/^"(.+):(.+)" sends POST "([^"]+)" with "([^"]+)" on admin port$/) do |user,password,url,parameters|
-  $config.each do |doc|
+  $config["http"].each do |doc|
     app_context = doc[0]
     http, request = get_http_request("POST", url, user, password, true, app_context)
     apply_form_parameters(request,parameters)
@@ -92,7 +92,13 @@ end
 ###### THEN #############
 
 Then /^I expect HTTP code (\d+)\s*$/ do |code|
-  @response.code.should == code
+  begin
+    @response.code.should == code
+  rescue RSpec::Expectations::ExpectationNotMetError => error
+    # better error msg with actual JSON vs just the diff from json_spec
+    full_error = "#{error}\nHTTP response: #{@response.body}\n#{@response.header}"
+    raise RSpec::Expectations::ExpectationNotMetError.new(full_error)
+  end
 end
 
 Then /^I expect HTTP header "([^"]*)" equals "([^"]*)"$/ do |header_name, header_value|
@@ -134,18 +140,37 @@ Then(/^I expect HTTP content contains "(.*)"$/) do |string|
   @response.body.should include(string)
 end
 
+Then(/^I expect HTTP content contains$/) do |string|
+  begin
+    @response.body.should include(string)
+  rescue RSpec::Expectations::ExpectationNotMetError => json_error
+    # better error msg with actual JSON vs just the diff from json_spec
+    full_error = "Actual text:\n" + @response.body + "\n" + json_error.to_s
+    raise RSpec::Expectations::ExpectationNotMetError.new(full_error)
+  end
+end
+
+Then(/^I expect HTTP content matches/) do |string|
+  begin
+    /#{string}/.should match(@response.body)
+  rescue RSpec::Expectations::ExpectationNotMetError => json_error
+    # better error msg with actual JSON vs just the diff from json_spec
+    full_error = "Actual text:\n" + @response.body + "\n" + json_error.to_s
+    raise RSpec::Expectations::ExpectationNotMetError.new(full_error)
+  end
+end
 
 
 # UTILITY METHODS
 
 # loads the host and port from the app-specific context in the URL
 def get_http(url, admin_port = false, app_context = nil)
-  app_context = url.split("/")[1] if app_context == nil
-  host = "127.0.0.1"
 
-  port = $config[app_context]["http"]["port"]
+  app_context = url.split("/")[1] if app_context == nil
+  host = $config["http"][app_context]["host"]
+  port = $config["http"][app_context]["port"]
   if admin_port
-    port = $config[app_context]["http"]["adminPort"]
+    port = $config["http"][app_context]["adminPort"]
   end
 
   return Net::HTTP.new(host, port)
@@ -184,6 +209,7 @@ def execute_http_request(http, request)
   @http_headers.each do |header|
     request[header[0]] = header[1]
   end
+
   @response = http.request(request)
   @http_headers = {}
 end
