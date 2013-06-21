@@ -108,6 +108,7 @@ Then /^I expect HTTP header "([^"]*)" equals "([^"]*)"$/ do |header_name, header
 end
 
 Then(/^I expect JSON equivalent to$/) do |string|
+  string = replace_memorized_variables(string,false)
   expected = JSON.parse(string)
   expected_field_names = get_unique_field_names(expected)
 
@@ -180,6 +181,8 @@ end
 def get_http_request(method,url,user,password, admin_port = false, app_context = nil)
   http = get_http(url, admin_port, app_context)
 
+  url = replace_memorized_variables(url)
+
   request = nil
   case method
     when "GET"
@@ -247,4 +250,18 @@ def remove_field_names(json_doc, fields_set)
   json_doc.each {|doc| remove_field_names(doc, fields_set)} if json_doc.is_a?(Array)
 
   return json_doc
+end
+
+# takes a string and replaces all references to JsonSpec memory variables with actual values                                                                  
+def replace_memorized_variables(string_value, remove_quotes = true)
+  # if JsonSpec variables are present, replace any potential references to them in the URL                                                                    
+  JsonSpec.memory.each do |doc|
+    var_name = doc[0]
+    # doc[1] is stored with quotes "....." so we have to remove them if told to (usually yes)                                                                 
+    var_value = doc[1]
+    var_value = var_value.gsub('"',"") if remove_quotes
+    string_value = string_value.gsub("%{#{var_name}}",var_value)
+  end
+
+  return string_value
 end

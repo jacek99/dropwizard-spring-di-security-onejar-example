@@ -13,3 +13,8 @@ target
 *.jar
 *.war
 *.ear
+
+# IDE files
+.classpath
+.project
+.settings
