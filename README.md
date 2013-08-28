@@ -1,7 +1,10 @@
-Dropwizard Spring DI/Security & OneJar Example
+Dropwizard Spring DI/Security Example
 ==============================================
  
-Example showing how to integrate Dropwizard, Spring DI, Spring Security and OneJar together.
+Example showing how to integrate Dropwizard, Spring DI, Spring Security together.
+They are compiled into a single uber-jar using the Gradle Shadow plugin: <https://github.com/johnrengelman/shadow>.
+
+*We used the OneJar plugin before (hence it is in the title of this example), but it caused issues with Dropwizard's  HTML asset loading mechanism, so we replaced it with the Gradle Shadow plugin.*
 
 It also shows how to perform integration testing of a REST application
 using the famous BDD tool Cucumber:
@@ -38,20 +41,20 @@ gradle run
 
 Runs the app *main()* method
 
-gradle oneJar
+gradle shadow
 -------------
 
-Compiles the entire app together with its dependencies into one single super-JAR, using the Gradle OneJar plugin
+Compiles the entire app together with its dependencies into one single uber-JAR, using the Gradle Shadow plugin
 
-gradle runOneJar
+gradle runShadow
 ----------------
 
-Compiles and runs the OneJar version of the app
+Compiles and runs the Gradle Shadow uber-JAR version of the app
 
 gradle bdd
 ----------
 
-Runs the OneJar on a separate thread and executes the entire BDD test suite against the running application.
+Runs the uber-JAR on a separate thread and executes the entire BDD test suite against the running application.
 
 
 Integration testing with BDDs

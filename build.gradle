@@ -41,29 +41,38 @@ jar {
 buildscript {
     repositories {
         mavenRepo url:'http://repo.smokejumperit.com'
+        maven {
+            name 'Gradle Shadow'
+            url 'http://dl.bintray.com/content/johnrengelman/gradle-plugins'
+        }
     }
     dependencies {
         classpath 'com.smokejumperit:gradle-plugins:0.8.2'
+        classpath 'org.gradle.plugins:shadow:0.7.4'
     }
 }
 
+apply plugin: 'shadow'
 
-/**
- * BDD integration using Python behave for
- */
 task run(dependsOn: 'classes', type: JavaExec) {
     main = 'com.github.jacek99.myapp.MyAppService'
     classpath = sourceSets.main.runtimeClasspath
     args 'server','myapp.yml'
 }
 
-task runOneJar(type:Exec, dependsOn: oneJar) {
+//deprecated
+task runOneJar(type:Exec, dependsOn: 'oneJar') {
     workingDir = "build/libs"
     commandLine = ['java', '-jar', '-server', "dropwizard-spring-di-security-onejar-example-$version-standalone.jar",'server','../../myapp.yml']
 }
 
-task bdd(type: Exec, dependsOn: oneJar) {
-    description = "Tests BDDs against the running OneJar application"
+task runShadow(type:Exec, dependsOn: 'shadow') {
+    workingDir = "build/libs"
+    commandLine = ['java', '-jar', '-server', "dropwizard-spring-di-security-onejar-example-$version-shadow.jar",'server','../../myapp.yml']
+}
+
+task bdd(type: Exec, dependsOn: 'shadow') {
+    description = "Tests BDDs against the running application"
     
     // fix to run cucumber on a particular infernal OS properly
     if (Os.isFamily(Os.FAMILY_WINDOWS)) {
@@ -76,13 +85,13 @@ task bdd(type: Exec, dependsOn: oneJar) {
     def oneJarProcess = null
 
     doFirst{
-        println "Starting OneJar application on separate thread..."
+        println "Starting application on separate thread..."
         Thread.startDaemon {
-            oneJarProcess = "java -jar -server build/libs/dropwizard-spring-di-security-onejar-example-$version-standalone.jar server myapp.yml".execute()
+            oneJarProcess = "java -jar -server build/libs/dropwizard-spring-di-security-onejar-example-$version-shadow.jar server myapp.yml".execute()
         }
         println "Waiting for application to start before executing tests..."
         addShutdownHook {
-            println "Shutting down OneJar application"
+            println "Shutting down application"
             oneJarProcess.destroy()
         }
     }
