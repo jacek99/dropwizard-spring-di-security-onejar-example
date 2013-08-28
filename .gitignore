@@ -2,6 +2,7 @@
 out
 build
 target
+classes
 *.iml
 *.iws
 *.iml

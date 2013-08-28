@@ -30,7 +30,7 @@ public class MyAppService extends Service<MyAppConfiguration> {
         bootstrap.getObjectMapperFactory().setSerializationInclusion(JsonInclude.Include.NON_NULL);
 
         //serve some HTML resources
-        bootstrap.addBundle(new AssetsBundle("/assets/", "/"));
+        bootstrap.addBundle(new AssetsBundle("/assets/", "/myapp/"));
     }
 
     @Override
@@ -49,7 +49,6 @@ public class MyAppService extends Service<MyAppConfiguration> {
         //the real main app context has a link to the parent context
         ctx.setParent(parent);
         ctx.register(MyAppSpringConfiguration.class);
-        //ctx.setConfigLocations(new String[]{MyAppSpringConfiguration.class.getPackage().getName()});
         ctx.refresh();
         ctx.registerShutdownHook();
         ctx.start();
