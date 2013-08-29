@@ -32,6 +32,7 @@ dependencies {
 jar {
     manifest {
         attributes 'Main-Class': 'com.github.jacek99.myapp.MyAppService'
+        attributes 'Implementation-Title': 'MyApp' ,'Implementation-Version': version
     }
 }
 
