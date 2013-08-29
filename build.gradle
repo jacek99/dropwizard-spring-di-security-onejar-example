@@ -1,7 +1,5 @@
 import org.apache.tools.ant.taskdefs.condition.Os
 
-apply plugin: com.smokejumperit.gradle.OneJarPlugin
-
 apply plugin: 'java'
 apply plugin: 'idea'
 apply plugin: 'eclipse'
@@ -41,14 +39,12 @@ jar {
  */
 buildscript {
     repositories {
-        mavenRepo url:'http://repo.smokejumperit.com'
         maven {
             name 'Gradle Shadow'
             url 'http://dl.bintray.com/content/johnrengelman/gradle-plugins'
         }
     }
     dependencies {
-        classpath 'com.smokejumperit:gradle-plugins:0.8.2'
         classpath 'org.gradle.plugins:shadow:0.7.4'
     }
 }
@@ -59,12 +55,6 @@ task run(dependsOn: 'classes', type: JavaExec) {
     main = 'com.github.jacek99.myapp.MyAppService'
     classpath = sourceSets.main.runtimeClasspath
     args 'server','myapp.yml'
-}
-
-//deprecated
-task runOneJar(type:Exec, dependsOn: 'oneJar') {
-    workingDir = "build/libs"
-    commandLine = ['java', '-jar', '-server', "dropwizard-spring-di-security-onejar-example-$version-standalone.jar",'server','../../myapp.yml']
 }
 
 task runShadow(type:Exec, dependsOn: 'shadow') {
