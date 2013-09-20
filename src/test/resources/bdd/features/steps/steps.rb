@@ -17,7 +17,13 @@ Given(/^"(.+):(.+)" sends POST "([^"]+)":/) do |user, password, url, table|
     end
     request.set_form_data(hash)
     execute_http_request(http, request)
-    @response.code.should == "201"
+    begin
+      @response.code.should == "201"
+    rescue RSpec::Expectations::ExpectationNotMetError => error
+      # better error msg with actual JSON vs just the diff from json_spec
+      full_error = "#{error}\nHTTP response: #{@response.body}\n#{@response.header}"
+      raise RSpec::Expectations::ExpectationNotMetError.new(full_error)
+    end
   end
 end
 
@@ -50,13 +56,15 @@ When /^"(.+):(.+)" sends (POST|PUT|PATCH) "([^"]+)" with (CSV|text) file "([^"]+
   execute_http_request(http,request)
 end
 
-When /^"(.+):(.+)" sends (POST|PUT|PATCH) "([^"]+)" with (text|json)$/ do |user,password,method,url,content_type,text|
+When /^"(.+):(.+)" sends (POST|PUT|PATCH) "([^"]+)" with (text|json|JSON|csv)$/ do |user,password,method,url,content_type,text|
   http, request = get_http_request(method,url, user, password)
   case content_type
-    when "json"
+    when "json","JSON"
       request["content-type"] = "application/json"
     when "text"
       request["content-type"] = "text/plain"
+    when "csv"
+      request["content-type"] = "text/csv"
   end
   request.body = text
   execute_http_request(http,request)
@@ -76,6 +84,7 @@ When(/^"(.+):(.+)" sends (GET|POST) "([^"]+)" on admin port$/) do |user,password
   end
 end
 
+# executed against all admin ports in an app
 When(/^"(.+):(.+)" sends POST "([^"]+)" with "([^"]+)" on admin port$/) do |user,password,url,parameters|
   $config["http"].each do |doc|
     app_context = doc[0]
@@ -84,6 +93,32 @@ When(/^"(.+):(.+)" sends POST "([^"]+)" with "([^"]+)" on admin port$/) do |user
     execute_http_request(http, request)
   end
 end
+
+# application-specific, executed on a single app admin port only
+When(/^"(.+):(.+)" sends (GET|POST) "([^"]+)" on "(.+)" admin port$/) do |user,password,method,url,app_context|
+  # send it to all apps registered in the $config 
+  http, request = get_http_request(method,url,user,password,true,app_context)
+  execute_http_request(http, request)
+end
+
+# application-specific, executed on a single app admin port only
+When /^"(.+):(.+)" sends (POST|PUT|PATCH) "([^"]+)" with (text|JSON|form) on "(.+)" admin port$/ do |user,password,method,url,content_type,app_context,text|
+  http, request = get_http_request(method,url, user, password,true,app_context)
+  case content_type
+    when "JSON"
+      request["content-type"] = "application/json"
+      request.body = text
+    when "text"
+      request["content-type"] = "text/plain"
+      request.body = text
+    when "form"
+      request["content-type"] = "application/x-www-form-urlencoded"
+      apply_form_parameters(request,text)
+  end
+
+  execute_http_request(http,request)
+end
+
 
 When(/^I sleep for (\d+)\s* seconds$/) do |seconds|
   sleep(seconds.to_i)
@@ -102,6 +137,7 @@ Then /^I expect HTTP code (\d+)\s*$/ do |code|
 end
 
 Then /^I expect HTTP header "([^"]*)" equals "([^"]*)"$/ do |header_name, header_value|
+  header_value = replace_memorized_variables(header_value)
   if header_name != SKIP and header_value != SKIP then
     @response[header_name].should == header_value
   end
@@ -120,7 +156,9 @@ Then(/^I expect JSON equivalent to$/) do |string|
     JSON.dump(actual_compare).should be_json_eql(string)
   rescue RSpec::Expectations::ExpectationNotMetError => json_error
     # better error msg with actual JSON vs just the diff from json_spec
-    full_error = "Actual JSON:\n" + JSON.pretty_generate(actual) + "\n" + json_error.to_s
+    full_error = "Actual full JSON:\n" + JSON.pretty_generate(actual) +
+        "\n------------------------------\nActual JSON with expected fields only:\n" + JSON.pretty_generate(actual_compare) +
+        "\n------------------------------\n" + json_error.to_s
     raise RSpec::Expectations::ExpectationNotMetError.new(full_error)
   end
 
@@ -138,10 +176,20 @@ end
 
 
 Then(/^I expect HTTP content contains "(.*)"$/) do |string|
+  string = replace_memorized_variables(string)
   @response.body.should include(string)
 end
 
+Then(/^I expect HTTP content does not contain "(.*)"$/) do |string|
+  if @response.body[string] != nil
+    full_error = "Text '#{string}' found in response body:\n#{@response.body}"
+    raise RSpec::Expectations::ExpectationNotMetError.new(full_error)
+  end
+end
+
+
 Then(/^I expect HTTP content contains$/) do |string|
+  string = replace_memorized_variables(string)
   begin
     @response.body.should include(string)
   rescue RSpec::Expectations::ExpectationNotMetError => json_error
@@ -174,7 +222,13 @@ def get_http(url, admin_port = false, app_context = nil)
     port = $config["http"][app_context]["adminPort"]
   end
 
-  return Net::HTTP.new(host, port)
+  http = Net::HTTP.new(host, port)
+
+  # for large perf files
+  http.continue_timeout = 30 * 60
+  http.read_timeout = 30 * 60
+
+  return http
 end
 
 # generates the appropriate HTTP request based on method
@@ -223,7 +277,14 @@ def apply_form_parameters(request,parameters)
   splitparams = parameters.split "&"
   splitparams.each do |part|
     keyValue = part.split "="
-    form[keyValue[0]] = keyValue[1]
+    key = keyValue[0].strip()
+    value = keyValue[1]
+    # support multiple parameters -> turn it into an array
+    if !form.has_key?(key)
+      form[key] = [value]
+    else
+      form[key] << value
+    end
   end
   request.set_form_data(form)
 end
@@ -252,12 +313,12 @@ def remove_field_names(json_doc, fields_set)
   return json_doc
 end
 
-# takes a string and replaces all references to JsonSpec memory variables with actual values                                                                  
+# takes a string and replaces all references to JsonSpec memory variables with actual values
 def replace_memorized_variables(string_value, remove_quotes = true)
-  # if JsonSpec variables are present, replace any potential references to them in the URL                                                                    
+  # if JsonSpec variables are present, replace any potential references to them in the URL
   JsonSpec.memory.each do |doc|
     var_name = doc[0]
-    # doc[1] is stored with quotes "....." so we have to remove them if told to (usually yes)                                                                 
+    # doc[1] is stored with quotes "....." so we have to remove them if told to (usually yes)
     var_value = doc[1]
     var_value = var_value.gsub('"',"") if remove_quotes
     string_value = string_value.gsub("%{#{var_name}}",var_value)
