@@ -215,7 +215,7 @@ Assuming you are installing this on a recent **Fedora** box, you can then instal
     Installed:
       myapp.noarch 0:1.1-20130921145949
 
-Start up the daamon using *systemd*:
+Start up the daemon using *systemd*:
 
     sudo systemctl start myapp
 
@@ -247,12 +247,17 @@ Uninstall it and verify the service got stopped automatically (look for *'Stoppi
     Removed:
       myapp.noarch 0:1.1-20130921145949
 
+In the sample above, we are running the service as **root**, which is not recommended.
+You can change the default user by modifying the contents of the **/etc/systemd/system/myapp.service** file:
+
+    [Service]
+    User=root
 
 **Note**:  On **CentOS**, instead of using *systemd*, you would just use the same upstart command as on Debian:
 
     sudo start myapp
 
-and the RPM should install and behave the same way.
+and the the app should run as a Linux dameon.
 
 Also, since the Gradle RPM plugin using the pure Java *Redline* library for building RPMs, you can build them on
 any platform that runs Java.
