@@ -259,5 +259,4 @@ You can change the default user by modifying the contents of the **/etc/systemd/
 
 and the the app should run as a Linux dameon.
 
-Also, since the Gradle RPM plugin using the pure Java *Redline* library for building RPMs, you can build them on
-any platform that runs Java.
+Also, since the Gradle RPM plugin uses the pure Java *Redline* library, you can build them on any platform that runs Java.
