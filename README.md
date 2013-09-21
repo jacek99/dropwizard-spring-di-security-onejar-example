@@ -139,7 +139,7 @@ You can then install the **.deb**:
 
 Run it as a service:
 
-    sudo service myapp start
+    sudo start myapp
 
     myapp start/running, process 20141
 
@@ -248,3 +248,11 @@ Uninstall it and verify the service got stopped automatically (look for *'Stoppi
       myapp.noarch 0:1.1-20130921145949
 
 
+**Note**:  On **CentOS**, instead of using *systemd*, you would just use the same upstart command as on Debian:
+
+    sudo start myapp
+
+and the RPM should install and behave the same way.
+
+Also, since the Gradle RPM plugin using the pure Java *Redline* library for building RPMs, you can build them on
+any platform that runs Java.
