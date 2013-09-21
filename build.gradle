@@ -3,6 +3,7 @@ import org.apache.tools.ant.taskdefs.condition.Os
 apply plugin: 'java'
 apply plugin: 'idea'
 apply plugin: 'eclipse'
+apply plugin: 'rpm'
 
 project.sourceCompatibility = 1.7
 project.targetCompatibility = 1.7
@@ -35,7 +36,7 @@ jar {
 }
 
 /**
- * One-JAR plugin integration
+ * Gradle Shadow plugin integration
  */
 buildscript {
     repositories {
@@ -43,9 +44,11 @@ buildscript {
             name 'Gradle Shadow'
             url 'http://dl.bintray.com/content/johnrengelman/gradle-plugins'
         }
+        mavenCentral()
     }
     dependencies {
         classpath 'org.gradle.plugins:shadow:0.7.4'
+        classpath 'com.trigonic:gradle-rpm-plugin:1.4'
     }
 }
 
@@ -59,7 +62,7 @@ task run(dependsOn: 'classes', type: JavaExec) {
 
 task runShadow(type:Exec, dependsOn: 'shadow') {
     workingDir = "build/libs"
-    commandLine = ['java', '-jar', '-server', "dropwizard-spring-di-security-onejar-example-$version-shadow.jar",'server','../../myapp.yml']
+    commandLine = ['java', '-jar', '-server', "myapp-$version-shadow.jar",'server','../../myapp.yml']
 }
 
 task bdd(type: Exec, dependsOn: 'shadow') {
@@ -78,7 +81,7 @@ task bdd(type: Exec, dependsOn: 'shadow') {
     doFirst{
         println "Starting application on separate thread..."
         Thread.startDaemon {
-            oneJarProcess = "java -jar -server build/libs/dropwizard-spring-di-security-onejar-example-$version-shadow.jar server myapp.yml".execute()
+            oneJarProcess = "java -jar -server build/libs/myapp-$version-shadow.jar server myapp.yml".execute()
         }
         println "Waiting for application to start before executing tests..."
         addShutdownHook {
@@ -88,3 +91,49 @@ task bdd(type: Exec, dependsOn: 'shadow') {
     }
 
 }
+
+/**
+ * NATIVE LINUX PACKAGING SUPPORT
+ */
+
+/**
+ * DEBIAN / RPM integration
+ */
+task deb(dependsOn: 'shadow') << {
+
+    //define full Debian package name and version number
+    ext.debian = "myapp-${version}"
+
+    copy {
+        from "src/deploy/resources/config"
+        from "src/deploy/resources/upstart"
+        into "build/distributions/$debian"
+    }
+    copy {
+        from "src/deploy/resources/deb"
+        into "build/distributions/$debian/DEBIAN"
+    }
+    copy {
+        from("build/libs") {
+            include "myapp-$version-shadow.jar"
+            //remove version number from actual file installed on a server, removes need to update myapp.conf every time
+            rename { String fileName ->
+                fileName.replace("-$version", '')
+            }
+        }
+        into "build/distributions/$debian/opt/myapp"
+    }
+
+    //replace version in Debian control file
+    println "Updating version in Debian control file"
+    String contents = file(new File( "build/distributions/$debian/DEBIAN/control" )).getText( 'UTF-8')
+    contents = contents.replaceAll( '##VERSION##', "$version")
+    file(new File("build/distributions/$debian/DEBIAN/control")).write(contents,'UTF-8')
+
+    println "Compiling ${debian}.deb using Debian packaging tools..."
+    exec {
+        commandLine = ['dpkg-deb',"--build","$debian"]
+        workingDir = "build/distributions"
+    }
+}
+

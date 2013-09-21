@@ -1,0 +1,28 @@
+http:
+  rootPath: /myapp/services/rest/*
+  port: 8080
+  adminPort: 8081
+  requestLog:
+    console:
+      enabled: false
+    file:
+      enabled: true
+      currentLogFilename: /var/log/myapp/requests.log
+      archive: true
+      archivedLogFilenamePattern: /var/log/myapp/requests-%d.log.gz
+      archivedFileCount: 5
+
+# Logging settings.
+logging:
+  # The default level of all loggers. Can be OFF, ERROR, WARN, INFO, DEBUG, TRACE, or ALL.
+  level: WARN
+  loggers:
+    "com.yammer.dropwizard": INFO
+  console:
+    enabled: false
+  file:
+    enabled: true
+    currentLogFilename: /var/log/myapp/myapp.log
+    archive: true
+    archivedLogFilenamePattern: /var/log/myapp/myapp-%d.log.gz
+    archivedFileCount: 5
