@@ -1,0 +1,17 @@
+#!/bin/bash
+
+echo "Stopping MyApp..."
+
+# handle Fedora systemd
+if [ -f /usr/bin/systemctl ];
+then
+   systemctl stop myapp
+fi
+
+# handle CentOS upstart
+if [ -f /usr/bin/stop ];
+then
+   stop myapp
+fi
+
+exit 0

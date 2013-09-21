@@ -1,4 +1,5 @@
 import org.apache.tools.ant.taskdefs.condition.Os
+import java.text.SimpleDateFormat
 
 apply plugin: 'java'
 apply plugin: 'idea'
@@ -48,8 +49,12 @@ buildscript {
     }
     dependencies {
         classpath 'org.gradle.plugins:shadow:0.7.4'
-        classpath 'com.trigonic:gradle-rpm-plugin:1.4'
+        classpath 'com.trigonic:gradle-rpm-plugin:1.3'
     }
+}
+
+ext {
+    release = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date())
 }
 
 apply plugin: 'shadow'
@@ -102,11 +107,11 @@ task bdd(type: Exec, dependsOn: 'shadow') {
 task deb(dependsOn: 'shadow') << {
 
     //define full Debian package name and version number
-    ext.debian = "myapp-${version}"
+    ext.debian = "myapp-${version}-${project.ext.release}"
 
     copy {
         from "src/deploy/resources/config"
-        from "src/deploy/resources/upstart"
+        from "src/deploy/resources/upstart/debian"
         into "build/distributions/$debian"
     }
     copy {
@@ -136,4 +141,53 @@ task deb(dependsOn: 'shadow') << {
         workingDir = "build/distributions"
     }
 }
+
+task rpm(type: Rpm, dependsOn: 'shadow') {
+    packageName = 'myapp'
+    version = "$version"
+    release = project.ext.release
+    arch = NOARCH
+    os = LINUX
+    summary = "MyApp"
+    description 'Dropwizard sample app'
+    vendor = 'Jacek Furmankiewicz'
+    url = 'https://github.com/jacek99'
+
+    //installUtils = file('scripts/rpm/utils.sh')
+    //preInstall = file('scripts/rpm/preInstall.sh')
+    postInstall = file('src/deploy/resources/rpm/postinst')
+    preUninstall = file('src/deploy/resources/rpm/prerm')
+    //postUninstall = file('scripts/rpm/postUninstall.sh')
+
+    requires('java-1.7.0-openjdk', '1.7', GREATER | EQUAL)
+
+    into '/opt/myapp'
+
+    //application executable
+    from("build/libs") {
+        include "myapp-$version-shadow.jar"
+        //remove version from file to avoid having to redo config files on every release
+        rename { String fileName ->
+            fileName.replace("-$version", '')
+        }
+    }
+    //configuration file
+    from('src/deploy/resources/config') {
+        fileType = CONFIG
+        into '/'
+    }
+
+    //systemd configuration for Fedora
+    from('src/deploy/resources/systemd') {
+        fileType = CONFIG
+        into '/'
+    }
+
+    //Upstart file for CentOS/RHEL, customized compared to the Debian version
+    from('src/deploy/resources/upstart/centos') {
+        fileType = CONFIG
+        into '/'
+    }
+}
+
 

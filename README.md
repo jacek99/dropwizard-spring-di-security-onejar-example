@@ -185,5 +185,66 @@ and the *gradle deb* task will execute successfully on those flavors of Linux as
 You can obviously install the actual **.deb** on Debian systems only though.
 
 
+### gradle rpm ###
+
+Create a native **.rpm** file (in *build/distributions*).
+It includes daemon config files for both **CentOS** *upstart* (which is fairly outdated by now)
+or the latest **Fedora** *systemd* init system (which is the long term replacement for *init.d* and *upstart*).
+
+Assuming you are installing this on a recent **Fedora** box, you can then install the **.rpm**:
+
+    sudo yum localinstall build/distributions/myapp-1.1-20130921145949.noarch.rpm
+
+    Loaded plugins: etckeeper, fastestmirror, langpacks, priorities, refresh-packagekit, refresh-updatesd, versionlock
+    Examining build/distributions/myapp-1.1-20130921145949.noarch.rpm: myapp-1.1-20130921145949.noarch
+    Marking build/distributions/myapp-1.1-20130921145949.noarch.rpm to be installed
+    Resolving Dependencies
+    --> Running transaction check
+    ---> Package myapp.noarch 0:1.1-20130921145949 will be installed
+    --> Finished Dependency Resolution
+    Running transaction check
+    Running transaction test
+    Transaction test succeeded
+    Running transaction
+    etckeeper: pre transaction commit
+      Installing : myapp-1.1-20130921145949.noarch                                                                                                                              1/1
+    Initializing MyApp...
+    etckeeper: post transaction commit
+      Verifying  : myapp-1.1-20130921145949.noarch                                                                                                                              1/1
+
+    Installed:
+      myapp.noarch 0:1.1-20130921145949
+
+Start up the daamon using *systemd*:
+
+    sudo systemctl start myapp
+
+    ps -ef | grep myapp
+    root     27447     1 66 15:04 ?        00:00:03 /usr/lib/jvm/jre-1.7.0/bin/java -jar -server -Xms512m -Xmx512m myapp-shadow.jar server /etc/myapp
+
+Kill it and verify Linux restarts it automatically:
+
+    sudo kill -9 27447
+
+    ps -ef | grep myapp
+    root     27578     1 99 15:05 ?        00:00:01 /usr/lib/jvm/jre-1.7.0/bin/java -jar -server -Xms512m -Xmx512m myapp-shadow.jar server /etc/myapp.yml
+
+Uninstall it and verify the service got stopped automatically (look for *'Stopping MyApp...' message):
+
+    sudo yum remove myapp -y
+
+    Loaded plugins: etckeeper, fastestmirror, langpacks, priorities, refresh-packagekit, refresh-updatesd, versionlock
+
+    Resolving Dependencies
+    --> Running transaction check
+    ---> Package myapp.noarch 0:1.1-20130921145949 will be erased
+    --> Finished Dependency Resolution
+    Stopping MyApp...
+      Erasing    : myapp-1.1-20130921145949.noarch                                                                                                                              1/1
+    etckeeper: post transaction commit
+      Verifying  : myapp-1.1-20130921145949.noarch                                                                                                                              1/1
+
+    Removed:
+      myapp.noarch 0:1.1-20130921145949
 
 

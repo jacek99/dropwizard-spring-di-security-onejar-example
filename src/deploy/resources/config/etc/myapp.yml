@@ -1,3 +1,5 @@
+# PRODUCTION SETTINGS FOR SERVER INSTALLATIONS
+
 http:
   rootPath: /myapp/services/rest/*
   port: 8080

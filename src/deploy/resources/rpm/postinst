@@ -1,0 +1,10 @@
+#!/bin/bash
+
+echo "Initializing MyApp..."
+
+if [ -f /usr/bin/systemctl ];
+then
+   systemctl daemon-reload
+fi
+
+exit 0

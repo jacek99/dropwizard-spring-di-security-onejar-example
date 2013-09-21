@@ -1,0 +1,13 @@
+[Unit]
+Description=MyApp
+After=local-fs.target network.target
+
+[Service]
+User=root
+EnvironmentFile=/opt/myapp/environment
+WorkingDirectory=/opt/myapp
+ExecStart=/usr/lib/jvm/jre-1.7.0/bin/java -jar -server $JVM_OPTIONS myapp-shadow.jar server /etc/myapp.yml
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
