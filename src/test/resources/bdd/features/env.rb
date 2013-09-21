@@ -45,20 +45,39 @@ def wait_for_apps_to_start
   # ping the health checks to wait until it returns 200
   $config["http"].each do |doc|
 
+    app_name = doc[0]
     http = Net::HTTP.new(doc[1]["host"], doc[1]["adminPort"])
     request = Net::HTTP::Get.new("/healthcheck")
     request.basic_auth("ops","password")
 
-    begin
-      response = http.request(request)
-      while response.code != "200"
-        sleep(1.0)
+    started = false
+
+    # try for X sec max
+    for i in 1..120 do
+
+      begin
         response = http.request(request)
+        if response.code == "200"
+          started = true
+          break
+        end
+      rescue
+        # do nothing in case of connection error
       end
-    rescue
-      # call itself again in case of connection error
+
+      $stdout.puts "Waiting for '#{app_name}' to start..."
       sleep(1.0)
-      wait_for_apps_to_start()
+
     end
+
+    if started
+      $stdout.puts "'#{app_name}' started!"
+    else
+      $stdout.puts "'#{app_name}' failed to start!"
+      raise "'#{app_name}' failed to start!"
+    end
+
   end
+
 end
+
