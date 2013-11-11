@@ -66,9 +66,21 @@ To get it fully running and installed do the following:
     sudo gem install bundler
     bundle install
 
-**Fedora / CentOS**
+**Fedora**
 
     sudo yum install ruby ruby-devel libyaml-devel
+    gem install bundler
+    bundle install
+
+**CentOS / RHEL**
+
+RHEL and its derivates feature an old version of Ruby (1.8), where the standard HTTP library does not have support
+for the HTTP PATCH command. Hence, it is necessary to install Ruby 1.9 from source on that distribution:
+
+http://jonathanmanning.com/2011/11/16/how-to-install-and-compile-ruby-1-9-3-from-source-with-libyaml-on-centos/
+
+The rest is the same afterwards
+
     gem install bundler
     bundle install
 
