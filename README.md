@@ -80,12 +80,12 @@ http://rubyinstaller.org/
 and the Ruby 1.9 DevKit as well:
 http://rubyinstaller.org/add-ons/devkit/
 
-Install the dev kit (from the folder where you placed it):
+Install the Ruby dev kit (from the folder where you placed it):
 
     ruby dk.rb init
     ruby dk.rb install
 
-The rest is similar afterwards:
+Go back to the folder where you checked out this source code and do:
 
     gem install bundler
     bundle install
