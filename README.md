@@ -21,8 +21,9 @@ http://projectlombok.org/
 
 Please make sure you have the appropriate Lombok plugin installed in your IDE.
 
-
 ## Core Gradle tasks ##
+
+**Note**: Gradle 1.7 is recommended at this time. Gradle 1.8 seems to have issues with the RPM plugin
 
 ### gradle idea ###
 

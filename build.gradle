@@ -49,7 +49,7 @@ buildscript {
     }
     dependencies {
         classpath 'org.gradle.plugins:shadow:0.7.4'
-        classpath 'com.trigonic:gradle-rpm-plugin:1.3'
+        classpath 'com.trigonic:gradle-rpm-plugin:1.4'
     }
 }
 
