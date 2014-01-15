@@ -23,29 +23,29 @@ Please make sure you have the appropriate Lombok plugin installed in your IDE.
 
 ## Core Gradle tasks ##
 
-**Note**: Gradle wrapper is used in this project. Run **gradlew** instead of *gradle* on all commands
+**Note**: Gradle 1.7 is recommended at this time. Gradle 1.8 seems to have issues with the RPM plugin
 
-### gradlew idea ###
+### gradle idea ###
 
 Regenerate IDEA IntelliJ bindings
 
-### gradlew eclipse ###
+### gradle eclipse ###
 
 Regenerate Eclipse bindings
 
-### gradlew run ###
+### gradle run ###
 
 Runs the app *main()* method
 
-### gradlew shadowJar ###
+### gradle shadow ###
 
 Compiles the entire app together with its dependencies into one single uber-JAR, using the Gradle Shadow plugin
 
-### gradlew runShadow ###
+### gradle runShadow ###
 
 Compiles and runs the Gradle Shadow uber-JAR version of the app
 
-### gradlew bdd ###
+### gradle bdd ###
 
 Runs the uber-JAR on a separate thread and executes the entire BDD test suite against the running application.
 
@@ -135,7 +135,7 @@ for them to roll it out across a large number of servers in a datacenter.
 
 ## Gradle tasks ##
 
-### gradlew deb ###
+### gradle deb ###
 
 Create a native **.deb** file (in *build/distributions*)
 
@@ -190,7 +190,15 @@ You can change the default user by modifying the contents of the **/etc/init/mya
     # change this user if required
     # setuid root
 
-### gradlew rpm ###
+**Note**:  You can create .deb files on CentOS / Fedora as well. You just need to have the **dpkg** package installed:
+
+    sudo yum install dpkg
+
+and the *gradle deb* task will execute successfully on those flavors of Linux as well.
+You can obviously install the actual **.deb** on Debian systems only though.
+
+
+### gradle rpm ###
 
 Create a native **.rpm** file (in *build/distributions*).
 It includes daemon config files for both **CentOS** *upstart* (which is fairly outdated by now)
@@ -264,3 +272,4 @@ You can change the default user by modifying the contents of the **/etc/systemd/
 
 and the the app should run as a Linux dameon.
 
+Also, since the Gradle RPM plugin uses the pure Java *Redline* library, you can build them on any platform that runs Java.

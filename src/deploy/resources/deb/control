@@ -1,0 +1,9 @@
+Package: myapp
+Version: ##VERSION##
+Section: dropwizard
+Priority: optional
+Architecture: all
+Depends: openjdk-7-jre
+Maintainer: Jacek Furmankiewicz
+Description: MyApp Dropwizard Service
+    An all-in-one Dropwizard app sample

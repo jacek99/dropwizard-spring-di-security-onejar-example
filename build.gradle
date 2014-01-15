@@ -4,33 +4,10 @@ import java.text.SimpleDateFormat
 apply plugin: 'java'
 apply plugin: 'idea'
 apply plugin: 'eclipse'
+apply plugin: 'rpm'
 
-sourceCompatibility = 1.7
-targetCompatibility = 1.7
-
-ext {
-    release = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date())
-}
-
-task wrapper(type: Wrapper) {
-    gradleVersion = '1.10'
-}
-
-buildscript {
-    repositories {
-        repositories {
-            maven { url 'http://jcenter.bintray.com' }
-        }
-        mavenCentral()
-    }
-    dependencies {
-        classpath 'com.github.jengelman.gradle.plugins:shadow:0.8'
-        classpath 'com.netflix.nebula:gradle-ospackage-plugin:1.10.0'
-    }
-}
-
-apply plugin: 'shadow'
-apply plugin: 'os-package-base'
+project.sourceCompatibility = 1.7
+project.targetCompatibility = 1.7
 
 repositories {
     mavenCentral()
@@ -51,6 +28,7 @@ dependencies {
 
 }
 
+
 jar {
     manifest {
         attributes 'Main-Class': 'com.github.jacek99.myapp.MyAppService'
@@ -58,6 +36,28 @@ jar {
     }
 }
 
+/**
+ * Gradle Shadow plugin integration
+ */
+buildscript {
+    repositories {
+        maven {
+            name 'Gradle Shadow'
+            url 'http://dl.bintray.com/content/johnrengelman/gradle-plugins'
+        }
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'org.gradle.plugins:shadow:0.7.4'
+        classpath 'com.trigonic:gradle-rpm-plugin:1.4'
+    }
+}
+
+ext {
+    release = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date())
+}
+
+apply plugin: 'shadow'
 
 task run(dependsOn: 'classes', type: JavaExec) {
     main = 'com.github.jacek99.myapp.MyAppService'
@@ -65,12 +65,12 @@ task run(dependsOn: 'classes', type: JavaExec) {
     args 'server','myapp.yml'
 }
 
-task runShadow(type:Exec, dependsOn: 'shadowJar') {
+task runShadow(type:Exec, dependsOn: 'shadow') {
     workingDir = "build/libs"
     commandLine = ['java', '-jar', '-server', "myapp-$version-shadow.jar",'server','../../myapp.yml']
 }
 
-task bdd(type: Exec, dependsOn: 'shadowJar') {
+task bdd(type: Exec, dependsOn: 'shadow') {
     description = "Tests BDDs against the running application"
     
     // fix to run cucumber on a particular infernal OS properly
@@ -101,11 +101,50 @@ task bdd(type: Exec, dependsOn: 'shadowJar') {
  * NATIVE LINUX PACKAGING SUPPORT
  */
 
-// common for both deb and rpm
-ospackage {
+/**
+ * DEBIAN / RPM integration
+ */
+task deb(dependsOn: 'shadow') << {
 
+    //define full Debian package name and version number
+    ext.debian = "myapp-${version}-${project.ext.release}"
+
+    copy {
+        from "src/deploy/resources/config"
+        from "src/deploy/resources/upstart/debian"
+        into "build/distributions/$debian"
+    }
+    copy {
+        from "src/deploy/resources/deb"
+        into "build/distributions/$debian/DEBIAN"
+    }
+    copy {
+        from("build/libs") {
+            include "myapp-$version-shadow.jar"
+            //remove version number from actual file installed on a server, removes need to update myapp.conf every time
+            rename { String fileName ->
+                fileName.replace("-$version", '')
+            }
+        }
+        into "build/distributions/$debian/opt/myapp"
+    }
+
+    //replace version in Debian control file
+    println "Updating version in Debian control file"
+    String contents = file(new File( "build/distributions/$debian/DEBIAN/control" )).getText( 'UTF-8')
+    contents = contents.replaceAll( '##VERSION##', "$version")
+    file(new File("build/distributions/$debian/DEBIAN/control")).write(contents,'UTF-8')
+
+    println "Compiling ${debian}.deb using Debian packaging tools..."
+    exec {
+        commandLine = ['dpkg-deb',"--build","$debian"]
+        workingDir = "build/distributions"
+    }
+}
+
+task rpm(type: Rpm, dependsOn: 'shadow') {
     packageName = 'myapp'
-    version = "1.2"
+    version = "$version"
     release = project.ext.release
     arch = NOARCH
     os = LINUX
@@ -113,59 +152,42 @@ ospackage {
     description 'Dropwizard sample app'
     vendor = 'Jacek Furmankiewicz'
     url = 'https://github.com/jacek99'
-    user 'root'
+
+    //installUtils = file('scripts/rpm/utils.sh')
+    //preInstall = file('scripts/rpm/preInstall.sh')
+    postInstall = file('src/deploy/resources/rpm/postinst')
+    preUninstall = file('src/deploy/resources/rpm/prerm')
+    //postUninstall = file('scripts/rpm/postUninstall.sh')
+
+    requires('java-1.7.0-openjdk', '1.7', GREATER | EQUAL)
 
     into '/opt/myapp'
 
     //application executable
-    from('build/distributions') {
-        user 'root'
+    from("build/libs") {
         include "myapp-$version-shadow.jar"
+        //remove version from file to avoid having to redo config files on every release
+        rename { String fileName ->
+            fileName.replace("-$version", '')
+        }
     }
-
-    // YAML application configuration file + init config files
+    //configuration file
     from('src/deploy/resources/config') {
-        user 'root'
-        fileType = CONFIG | NOREPLACE
+        fileType = CONFIG
+        into '/'
     }
-
-    // symlink to common name, regardless of version, in order for init scripts to work
-    link('/opt/myapp/myapp-shadow.jar', "/opt/myapp/myapp-$version-shadow.jar")
-}
-
-//must run 'clean shadow' before it
-task rpm (type: Rpm, dependsOn: 'shadowJar') {
-    postInstall = file('src/deploy/resources/rpm/postinst')
-    preUninstall = file('src/deploy/resources/rpm/prerm')
-
-    requires('java-1.7.0-openjdk')
 
     //systemd configuration for Fedora
-    link('/etc/systemd/system/myapp.service', '/opt/myapp/etc/service/systemd/myapp.service')
-    link('/opt/myapp/environment', '/opt/myapp/etc/service/systemd/environment', )
-
-    //Upstart file for CentOS/RHEL, customized compared to the Debian version, since CentOS has older version of upstart usually
-    //link('/etc/init/myapp.conf', '/opt/myapp/etc/service/upstart/centos/myapp.conf')
-
-    from('src/deploy/resources/config/etc/service/upstart/centos') {
-        user 'root'
-        into '/etc/init'
-        fileType = CONFIG | NOREPLACE
+    from('src/deploy/resources/systemd') {
+        fileType = CONFIG
+        into '/'
     }
 
+    //Upstart file for CentOS/RHEL, customized compared to the Debian version
+    from('src/deploy/resources/upstart/centos') {
+        fileType = CONFIG
+        into '/'
+    }
 }
-
-task deb (type: Deb, dependsOn: 'shadowJar') {
-    preUninstall = file('src/deploy/resources/deb/prerm')
-
-    requires('openjdk-7-jre')
-
-    //Upstart file for Debian, customized compared to the CentOS version
-    link('/etc/init/myapp.conf', '/opt/myapp/etc/service/upstart/debian/myapp.conf')
-}
-
-// add explicit task dependencies
-shadowJar.dependsOn "clean"
-
 
 
