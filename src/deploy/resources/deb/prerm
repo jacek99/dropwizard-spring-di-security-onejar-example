@@ -1,5 +1,7 @@
 #!/bin/bash
 
-echo "Stopping MyApp..."
-stop myapp
+if stop myapp
+then echo "Stopped MyApp"
+fi
+
 exit 0
