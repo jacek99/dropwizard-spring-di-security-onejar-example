@@ -6,8 +6,14 @@ apply plugin: 'idea'
 apply plugin: 'eclipse'
 apply plugin: 'rpm'
 
-project.sourceCompatibility = 1.7
-project.targetCompatibility = 1.7
+sourceCompatibility = 1.7
+targetCompatibility = 1.7
+
+
+//use Gradle Wrapper to control which version of Gradle is used (for plugin compatibility)
+task wrapper(type: Wrapper) {
+    gradleVersion = '1.7'
+}
 
 repositories {
     mavenCentral()

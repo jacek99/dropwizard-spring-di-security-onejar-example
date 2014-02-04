@@ -23,29 +23,29 @@ Please make sure you have the appropriate Lombok plugin installed in your IDE.
 
 ## Core Gradle tasks ##
 
-**Note**: Gradle 1.7 is recommended at this time. Gradle 1.8 seems to have issues with the RPM plugin
+Gradle Wrapper 1.7 is used for compatibility with the RPM plugin
 
-### gradle idea ###
+### gradlew idea ###
 
 Regenerate IDEA IntelliJ bindings
 
-### gradle eclipse ###
+### gradlew eclipse ###
 
 Regenerate Eclipse bindings
 
-### gradle run ###
+### gradlew run ###
 
 Runs the app *main()* method
 
-### gradle shadow ###
+### gradlew shadow ###
 
 Compiles the entire app together with its dependencies into one single uber-JAR, using the Gradle Shadow plugin
 
-### gradle runShadow ###
+### gradlew runShadow ###
 
 Compiles and runs the Gradle Shadow uber-JAR version of the app
 
-### gradle bdd ###
+### gradlew bdd ###
 
 Runs the uber-JAR on a separate thread and executes the entire BDD test suite against the running application.
 
@@ -135,7 +135,7 @@ for them to roll it out across a large number of servers in a datacenter.
 
 ## Gradle tasks ##
 
-### gradle deb ###
+### gradlew deb ###
 
 Create a native **.deb** file (in *build/distributions*)
 
@@ -198,7 +198,7 @@ and the *gradle deb* task will execute successfully on those flavors of Linux as
 You can obviously install the actual **.deb** on Debian systems only though.
 
 
-### gradle rpm ###
+### gradlew rpm ###
 
 Create a native **.rpm** file (in *build/distributions*).
 It includes daemon config files for both **CentOS** *upstart* (which is fairly outdated by now)
